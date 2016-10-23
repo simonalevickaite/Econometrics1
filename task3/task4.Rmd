@@ -15,5 +15,5 @@ library("cowsay")
 say("catfact", "cat")
 ```
 And now we got a cat!
-![Caption for the picture.](/home/simona/Desktop/cat.jpg)
+![Cat](/home/simona/Desktop/cat.jpg)
 Original material <http://rforcats.net/>
