@@ -1,1 +1,19 @@
+---
+title: "task3.Rmd"
+author: "Simona"
+date: "October 23, 2016"
+output: html_document
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+Wikipedia says, that R is a programming language and software environment for statistical computing and graphics supported by the R Foundation for Statistical Computing.
+But R is not just about serious things like model inference and prediction intervals and big analytics. Sometimes, R lets its hair down and just does weird and wonderful things because ... well just because.
+For example, lets create a cat.
+```{r}
+library("cowsay")
+say("catfact", "cat")
+```
+And now we got a cat!
 
+Original material <http://rforcats.net/>
