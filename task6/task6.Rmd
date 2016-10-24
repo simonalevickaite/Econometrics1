@@ -1,1 +1,128 @@
+---
+title: "task6"
+author: "Simona"
+date: "October 24, 2016"
+output: html_document
+---
+# Data reading and correction
 
+### Lets read data from csv file
+```{r}
+df = read.csv('/home/simona/Desktop/R_programing_swirlResults.csv', stringsAsFactors=FALSE)
+sapply(df, class) 
+```
+Lets fix incorrect data
+```{r}
+df <- transform(df, sysTime = as.POSIXlt(sysTime), datetime = as.POSIXlt(datetime))
+```
+### Lets delete wrong data ("1vbutkus", "aaa", "testas")
+```{r}
+unique(df$user)
+ind <- with(df, which(user=="aaa" | user=="testas" | user=="1vbutkus"))
+df <- df[-ind,]
+unique(df$user)
+```
+Lets eliminate duplicates of names in data (assign it to the same person)
+```{r}
+df$user[df$user=="gyse"] <- "gyse3054"
+df$user[df$user=="rokasalek"] <- "rokasaleks"
+df$user[df$user=="Juste" | df$user=="ju" | df$user=="j"] <- "juste"
+unique(df$user)
+```
+Lets eliminate duplicates of lessons in data (7 - username, 9 - lesson, 10 - question, 12 - attempt, 14 - skipped)
+```{r}
+df2 <- df[,c(7, 9, 10, 12, 14)]
+dup <- which(duplicated(df2), TRUE)
+df <- df[-dup,]
+```
+
+# Data analysis
+
+### Lets answer to some important practical questions
+Lets find students who skipped questions
+```{r}
+ind <- with(df, which(skipped =="TRUE"))
+df_skipped <- df[ind,]
+users <- unique(df_skipped$user)
+users
+```
+Lets eliminate students who skipped questions
+```{r}
+ind <- with(df, which(is.element(df$user, users) =="TRUE"))
+df_noskip <- df[-ind,]
+unique(df_noskip$user)
+```
+Lets find out how many lessons each student did
+```{r}
+df_noskip <- df_noskip[,c(7, 9)]
+dup <- which(duplicated(df_noskip), TRUE)
+df_noskip <- df_noskip[-dup,]
+table(df_noskip$user)
+```
+Students who did all the lessons is: "aipe00", "simona1234", "emru3000", "zagnyte"
+Lets find the number of undone lessons
+```{r}
+ind <- with(df_noskip, which(user=="aipe00" | user=="emru3000" | user=="simona1234" | user=="zagnyte"))
+df_noskip <- df_noskip[-ind,]
+16-table(df_noskip$user)
+```
+Lets find out how many questions each student skipped
+```{r}
+table(df_skipped$user)
+```
+Lets find which students skipped questions in lessons
+```{r}
+df_skipped <- unique(df_skipped[c("user", "lesson_name")])
+table(head(df_skipped, 10))
+```
+Lets filter data into two arrays
+```{r}
+library("knitr")
+df_skipped <- unique(df_skipped[c("user", "lesson_name")])
+kable(head(df_skipped, 10))
+ind <- with(df, which(is.element(df$user, users) =="TRUE"))
+df2 <- df[ind,]
+df2 <- df2[,c(7, 9)]
+dup <- which(duplicated(df2), TRUE)
+df2 <- df2[-dup,]
+kable(head(df2, 10))
+```
+Lets find how many lessons is undone by each student
+```{r}
+16-table(df2$user)+table(df_skipped$user)
+```
+
+# Other interesting questions
+
+### Whats the average of time to pass the tasks?
+Lets correct the data
+```{r}
+df_time <- df[,c(3, 6, 7, 9, 13)]
+df2 <- df[,c(7,9)]
+dup <- which(duplicated(df2), TRUE)
+df_time <- df_time[-dup,]
+kable(head(df_time))
+```
+Lets find the real time each student spent
+```{r}
+real_taketime <- round(difftime(df_time$sysTime, df_time$datetime, units="mins"))
+df_time <- cbind(df_time, real_taketime)
+kable(head(df_time))
+```
+Lets find out the average all students spent to do the task
+```{r}
+lessons <- split(df_time, f=df_time$lesson_name)
+time_decl <- sapply(lessons, function(x) round(mean(x$takeTime), 2))
+sort(time_decl)
+```
+### Can we trust declared time?
+```{r}
+timedif <- abs(df_time$takeTime - df_time$real_taketime)
+mean(timedif)
+```
+### Which tasks were the most difficult?
+Lets count the most difficult tasks by declared time
+```{r}
+head(sort(time_decl, decreasing=TRUE))
+```
+Reference https://github.com/simona1234/Econometrics1/blob/master/task6/task6.Rmd
