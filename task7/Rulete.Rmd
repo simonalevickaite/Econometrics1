@@ -1,0 +1,32 @@
+---
+title: "Rulete.Rmd"
+author: "Simona"
+date: "October 28, 2016"
+output: html_document
+---
+Lets note than n is number of bets, p1, p2 - probabilities to win when betting on different colours
+```{r}
+n <- 1000
+p1 <- 18/37
+p2 <- 19/37
+```
+Lets create the roulette rotation function
+```{r}
+rr <- function(){
+sum(sample(c(1,-1), size=n, replace=TRUE, prob=c(p1,p2)))
+ }
+```
+Lets repeat an experiment 1000 times
+```{r}
+experiment <- replicate (1000, rr())
+```
+Lets count the probability of positive balance
+```{r}
+mean(experiment>0)
+```
+Lets count x value for inequality: P(balansas<x) = 0.25
+```{r}
+x <- quantile(experiment, probs=0.25)
+x
+```
+Reference <https://github.com/justinasasnauskaite/Econometrics1/blob/master/task7/task7rulete.Rmd>
