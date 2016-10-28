@@ -1,0 +1,22 @@
+---
+title: "CRT.Rmd"
+author: "Simona"
+date: "October 28, 2016"
+output: html_document
+---
+Lets generate n random variables of Beta distribution with parameters alpha=beta=1/2. 
+```{r}
+expvalue=function(n){
+  mean(rbeta(n, 0.5, 0.5))
+}
+```
+Lets count 10000 estimates of expected values when n = 100
+```{r}
+estimates = replicate(10000, expvalue(100))
+```
+Lets create a density curve
+```{r}
+curve <-hist(estimates,main ="Density of expected value",xlab ="Value of expected value",ylab = "Density", probability = TRUE)
+lines(density(estimates), col=10,lwd=3)
+```
+Reference: <https://github.com/justinasasnauskaite/Econometrics1/blob/master/task7/task7crt.Rmd>
