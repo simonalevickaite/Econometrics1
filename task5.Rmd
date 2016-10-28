@@ -1,0 +1,54 @@
+---
+title: "task5"
+author: "Simona"
+date: "October 23, 2016"
+output: html_document
+---
+```{r}
+library(prob)
+```
+Lets generate random variable called S
+```{r}
+n <- 10^5
+S <- replicate(n, sum(sample(1:6, 3, replace=TRUE)))
+head(S)
+```
+Lets find theoretical distribution of S
+```{r}
+probS <- rolldie(3, nsides = 6, makespace = TRUE)
+probS <- addrv(probS, sum = X1 + X2 + X3)
+theorS <- marginal(probS, vars="sum")
+theorS
+```
+Lets create a frequency table from a generated sample
+```{r}
+data <- table(S)/n
+cbind(as.data.frame(data),theorS)
+```
+Lets create a graph from a generated sample
+```{r}
+plot(data, xlab = "Total", ylab = "Probability", col = "black", lwd = 3)
+points(theorS, col = "yellow", lwd = 3)
+```
+Lets count theoretical expected value and variance of random variable S
+```{r}
+exval <- sum(theorS$probs * theorS$sum)
+exval
+varS <- sum(theorS$probs * (theorS$sum - exval)^2)
+varS
+```
+Lets make a graph of expected value converging to theoretical value when n is increasing
+```{r}
+plot(cumsum(S)/1:n, xlab= "n", ylab = "S/n", ylim = c(10,12), type = "l", main = "Expected value converging to theoretical value", xlim = c(0,700))
+abline (h=exval, col = "yellow", lwd = 0.7)
+```
+Lets make a graph of expected variance converging to theoretical variance when n is increasing
+```{r}
+a = S*0
+for(i in 1:700){
+  a[i]=var(S[1:i])
+}
+plot(a[1:700], type="l", xlab="n", ylab="Expected variance", main = "Expected variance converging to theoretical variance")
+abline(h=varS, col = "yellow", lwd = 0.7)
+```
+Reference <https://github.com/simona1234/Econometrics1/blob/master/task5/task5.Rmd>
