@@ -1,0 +1,22 @@
+---
+title: "Kauliukai.Rmd"
+author: "Simona"
+date: "October 28, 2016"
+output: html_document
+---
+Lets generate 10000 first and second players attempts and count the winnings of first player
+```{r}
+n <- 100000
+pl1 <- replicate(n, sum(sample(1:6, 3, replace=TRUE)))
+pl2 <- replicate(n, sum(sample(1:6, 2, replace=TRUE)))
+sum(pl1 > pl2)
+```
+Lets deduct attempts where first and second players got the same number of points
+```{r}
+n2 <- n-sum(pl1 == pl2)
+```
+Lets find the first player's winning probability
+```{r}
+sum(pl1 > pl2)/n2
+```
+Reference <https://github.com/simona1234/Econometrics1/blob/master/task7/Kauliukai/Kauliukai.Rmd>
