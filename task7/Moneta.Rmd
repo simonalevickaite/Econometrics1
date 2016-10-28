@@ -1,0 +1,23 @@
+---
+title: "Moneta.Rmd"
+author: "Simona"
+date: "October 28, 2016"
+output: html_document
+---
+Lets count the probability of having a positive balance after 100 attempts
+```{r}
+n <- 100000
+balance <- replicate(n, sum(sample(c(12, -10), 100, replace=TRUE)))
+mean(balance>0)
+```
+Lets count the 95 % confidence interval of balance
+```{r}
+quantile(balance, 0.025) #lower
+quantile(balance, 0.975) #top
+```
+Lets create the plot of balance density
+```{r}
+plot(density(balance), main="Density of balance", lwd = 2, col = 10)
+grid()
+```
+Reference <https://github.com/simona1234/Econometrics1/blob/master/task7/Moneta/Moneta.Rmd>
