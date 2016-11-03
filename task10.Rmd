@@ -1,0 +1,30 @@
+---
+title: "task10"
+author: "Simona"
+date: "November 3, 2016"
+output: html_document
+---
+###First, lets do the a) part.
+Lets generate a sample and check if its expected value is equal to 1. For this, lets use function t.test.
+```{r}
+set.seed(10000)
+x <- rnorm(100, mean=1, sd=sqrt(2))
+t.test(x, mu=1)
+```
+P-value is a probability that we reject the right null hypothesis. P-value lets us to decide if we reject the null hypothesis or not. Because level of significance is 0.05, we can reject the null hypothesis if p-value is below 0.05. In this case, the null hypothesis is not rejected.     
+We can also confirm our findings with 95% confidence interval values. If value μ=1 falls into 95% confindence interval, null hypothesis is not rejected.
+  
+###Second, lets do the b) part.     
+Lets create a function that generates a sample and checks hypotheses that H0:μ=1 with alternative that μ≠1. Lets run this function 10^4 times and count how many times null hypothesis was rejected.     
+```{r}
+generate <- function() {
+  x <- rnorm(100, mean=1, sd=sqrt(2))
+  ttest <- t.test(x, mu=1)
+  return(ttest$p.value < 0.05)
+}
+y <- replicate(10^4, generate())
+mean(y)
+```
+There is ~5% chance that null hypothesis was rejected even if it was right. This conclusion follows the fact, that the level of significance was 0.05 - 5%.     
+  
+Reference <https://github.com/simona1234/Econometrics1/blob/master/task10/task10.Rmd>
