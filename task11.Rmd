@@ -1,0 +1,48 @@
+---
+title: "task11.Rmd"
+author: "Simona"
+date: "November 12, 2016"
+output: html_document
+---
+Lets open a data array longley
+```{r}
+head(longley)
+```
+###Lets do the first task.    
+Lets evaluate the model of simple linear regression.
+```{r}
+x <- longley$Employed
+y <- longley$GNP
+model <- lm(y~x)
+summary(model)
+```
+Explanations:  
+Call - function formula;  
+Residuals - minimum, first quartile, median, third quartile, maximum;  
+Coefficients - estimates of  β0 and β1, standard deviation, t-test value, probability;  
+Signif. codes - categories of probability;  
+Residual standard error - data standard error;  
+Multiple R-squared, Adjusted R-squared - grade of model suitability (max is 1);  
+F-statistic - Fischer distribution statistics;  
+P-value - probability that the statistical summary would be the same as or more extreme than the actual observed results.  
+    
+Probability is below 0.05, which indicates that model is statistically significant.
+
+###Lets do the second task.     
+Lets make a model forecast at given points.
+```{r}
+x1 <- c(62, 65, 68)
+y1 = predict(model, newdata=data.frame(x=x1))
+y1
+```
+###Lets do the third task.    
+Lets make a variable dispersion graph with linear regression line and new forecasts.
+```{r}
+plot(x, y, xlab='Employed', ylab='GNP')
+abline(model, col='blue')
+points(x1, y1, col=2, pch=19)
+grid()
+legend("topleft", c("Data","Regression line", "Forecasts"), lty=c(0,1,0), pch=c(1,NA,19), col=c(1,4,2))
+```
+
+Reference <https://github.com/simona1234/Econometrics1/blob/master/task11/task11.Rmd>
