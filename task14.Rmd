@@ -1,0 +1,36 @@
+---
+title: "task14.Rmd"
+author: "Simona"
+date: "November 18, 2016"
+output: html_document
+---
+##14 užduotis    
+Ar galima pertvarkyti skaičių 9754310 ir 8754310 skaitmenis, kad gautas skaičius dalytųsi iš 37?   
+    
+###a) dalies sprendimas    
+Sudarome vektorių su skaičiaus 9754310 skaitmenimis:
+```{r}
+sk1 <-c(9,7,5,4,3,1,0)
+```
+Sudarome funkciją, kuri ras skaičių, besidalijantį iš 37:
+```{r}
+repeat {
+x1 <- as.integer(paste(sample(sk1,7, replace=FALSE),collapse = ""))
+if(x1%%37==0) {print(x1) ; break}
+}
+```
+    
+###b) dalies sprendimas
+Sudarome vektorių su skaičiaus 8754310 skaitmenimis:
+```{r}
+sk2 <-c(8,7,5,4,3,1,0)
+```
+Sudarome funkciją, kuri ras skaičių, besidalijantį iš 37:
+```{r}
+repeat {
+x2 <- as.integer(paste(sample(sk2,7, replace=FALSE),collapse = ""))
+if(x2%%37==0) {print(x2) ; break}
+}
+```
+     
+Šaltinis: <https://github.com/justinasasnauskaite/Econometrics1/blob/master/task14/task14.Rmd>
