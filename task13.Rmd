@@ -1,0 +1,32 @@
+---
+title: "task13.Rmd"
+author: "Simona"
+date: "November 18, 2016"
+output: html_document
+---
+##13 užduotis   
+Reikia rasti a{1989}, kai a{n} seka sudaryta pagal taisyklę a{n+2} = a{n+1} / a{n}.   
+Pirmieji nariai yra a{1} = 2, a{2} = 3.   
+   
+###Sprendimas:    
+Pertvarkykime šią išraišką:   
+a{n+2} * a{n} = a{n+1}   
+a{n} * a{n+2} = a{n+1}  
+a{n-2} * a{n} = a{n-1}   
+
+Dabar matome, kad a{n} yra mūsų ieškoma reikšmė. Reikšmę a{n-2} panaudosime kaip R funkcijos "solve" pirmąjį koeficientą, o a{n-1} - kaip antrąjį koeficientą.    
+
+Ieškome n-tosios reikšmės:
+```{r}
+a_n <-function(n){
+x=numeric(n)
+x[1]=2
+x[2]=3
+for (i in 3:n) x[i]=solve(x[i-2],x[i-1])
+return(x[n])
+}
+a_n(1989)
+```
+Gavome atsakymą, kad mūsų ieškoma reikšmė yra 1.5   
+    
+Šaltinis: <https://github.com/justinasasnauskaite/Econometrics1/blob/master/task13/task13.Rmd>
