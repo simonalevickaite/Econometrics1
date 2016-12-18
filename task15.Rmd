@@ -1,0 +1,52 @@
+---
+title: "task15"
+author: "Simona"
+date: "November 24, 2016"
+output: html_document
+---
+###**15 užduotis**     
+
+####**1 dalis**
+Duomenų nuskaitymas:
+```{r}
+duomenys <- read.csv("https://raw.githubusercontent.com/1vbutkus/Econometrics1/master/task15/data.csv", header = TRUE)
+duomenys
+```
+Įvertiname modelį:
+```{r}
+a = duomenys$x #regresorius
+b = duomenys$y #prognozuojamas kintamasis
+model <- lm(b~a, data = duomenys)
+summary(model)
+```
+`Residuals` - skirtumas tarp kintamojo tikrųjų reikšmių ir ir regresijos nustatytų;  
+`Pr(>|t|)` - tikimybė,kad kintamasis nėra reikšmingas;  
+`Estimate` - regresija įvertintos beta reikšmės;  
+`Std. Error` - koeficiento įverčio standartinis nuokrypis;  
+`Signif. codes` - atitinka p reikšmę;  
+`Residual standard error` - residuals standartinis nuokrypis;  
+`Multiple R-squared` - matuoja modelio tinkamumą;  
+`F-statistic` - F testo rezultatas.            
+
+####**2 dalis**      
+Padarome modelio prognozes taškuose `0`, `0.3`, `0.5`: 
+```{r}
+a1 <- c(0, 0.3, 0.5)
+b1 <- predict(model, newdata = data.frame(a = a1))
+b1
+```
+####**3 dalis**    
+Išbrėžiame kintamųjų sklaidos diagramą kartu su tiesinės regresijos tiese ir naujomis prognozėmis:    
+```{r}
+plot(a, b, main = "Sklaidos diagrama", xlab="x", ylab="y", xlim=c(0,0.7), pch = 3, col = 2)
+model <- lm(b~a)
+abline(model, pch = 1, col='blue') #tiesinės regresijos tiesė
+a1 = c(0, 0.3, 0.5)
+b1 = predict(model, newdata = data.frame(a=a1))
+points(a1, b1, col=2, pch=19)
+legend("topleft", c("Duomenys","Tiesinės regresijos tiesė", "Naujos prognozės"), lty=c(0,1,0), pch=c(3,NA, 19), col=c(2,"blue","red"))
+```
+   
+####**4 dalis**      
+Manau, kad modelis duotiems duomenims nėra tinkamas, nes nepakankamai gerai apibrėžia duomenis.    
+Pasiūlymų tobulinimui neturiu.
