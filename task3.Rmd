@@ -1,0 +1,112 @@
+---
+title: "task3"
+author: "Simona"
+date: "January 20, 2017"
+output: html_document
+---
+###3 užduotis     
+1. Nuskaitome duomenis 
+```{r}
+require (RCurl) #reikalingi paketai
+require(base)
+require(knitr)
+require(stats)
+require(car)
+```
+
+```{r}
+duomenys <- read.csv("https://raw.githubusercontent.com/1vbutkus/Econometrics1/master/Egzaminas/data.csv",skip=7, sep=";", stringsAsFactors=FALSE)
+head(duomenys, n=1L) #atspausdiname vieną eilutę duomenų
+```
+2. Taisome duomenis
+```{r}
+dim(duomenys) #dimensija
+str(duomenys) #struktūra
+sapply(duomenys,class) #duomenų tipas
+```
+
+```{r}
+sum( is.na(duomenys) ) #patikriname, ar duomenyse yra NA
+```
+```{r}
+summary(duomenys) #matome, kad yra MISSING reikšmių
+```
+Pašaliname MISSING reikšmes:
+```{r}
+ind <- with(duomenys, which(kaina=="MISSING" | amzius=="MISSING", rida=="MISSING" | galia=="MISSING", markesKodas=="MISSING"))
+data <- duomenys[-ind,]
+```
+Sužinome, kiek eilučių pašalinome:
+```{r}
+nrow(duomenys) - nrow(data)
+```
+Sužinome, kiek eilučių iš viso liko:
+```{r}
+nrow(data)
+```
+Pataisome kintamuosius:
+```{r}
+data$kaina<-as.numeric(data$kaina) 
+data$amzius<-as.numeric(data$amzius) 
+data$galia <-as.numeric(data$galia) 
+```
+
+3. Pateikiame kintamųjų apžvalgą:
+```{r}
+data$markesKodas<-NULL #pašaliname markės kodą, nes jis įtakos nedaro
+```
+Pateikiame grafiką ir koreliacijas:
+```{r}
+plot(data)
+summary(data)
+cor(data)
+```
+4. Padalijame masyvą į du nesikertančius masyvus, juos pavadiname pagal užduotį:
+```{r}
+sub <- sample(nrow(data), floor(nrow(data) * 0.8))
+trainSet <- data[sub, ]
+testSet <- data[-sub, ]
+```
+Tikriname išskirtis:
+```{r}
+modIsskirtims<-lm(kaina~+rida+amzius+galia, trainSet)
+qqPlot(modIsskirtims, id.n=2)
+```
+5. Sudarome tiesinį modelį, kuriame prognozuojame kainą:   
+```{r}
+mod1<-lm(kaina~+rida+amzius+galia, trainSet)
+kable(summary(mod1)$coef, digits=3)
+```
+
+
+Iš summary lentelėje pateiktos p-value galime teigti, kad koeficientas prie kintamojo „galia“ yra nereikšmingas, todėl jis pašalinamas.
+```{r}
+trainSet$galia<-NULL
+```
+
+Gauname modelį:
+```{r}
+fit<-lm(kaina~+rida+amzius, trainSet)
+kable(summary(fit)$coef, digits=3)
+```
+  
+Visi likę įverčiai reikšmingi.    
+
+6. Patikriname modelį:
+```{r}
+(summary(fit))$r.squared #modelio "patikimumas"
+vif(fit) #multikolinearumo tikrinimas
+```
+7. Tikriname liekanų normalumą:
+```{r}
+hist(residuals(fit))
+shapiro.test(fit$res) 
+plot(residuals(fit), type="l", main="Modelio fit  paklaidos", ylab="fit paklaidos", xlab="Stebėjimas", col=100)
+abline(0,0)
+````
+  
+Matome, kad paklaidos nėra normalios (tą rodo Shapiro testas), todėl reikėtų modelį gerinti. 
+```{r}
+durbinWatsonTest(fit) #p reikšmė didesnė nei 0.05, todėl galime teigti, kad liekanos nekoreliuoja tarpusavyje.
+```
+Modelio lygtis:kaina=rida+amzius. Iš kable lentelės gauname koeficientus prie skaičių. 
